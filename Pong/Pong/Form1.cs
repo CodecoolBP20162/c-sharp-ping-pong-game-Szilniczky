@@ -19,7 +19,7 @@ namespace Pong
         public Form1()
         {
             InitializeComponent();
-
+            
             timer1.Enabled = true;
             Cursor.Hide();
 
@@ -28,6 +28,10 @@ namespace Pong
             this.Bounds = Screen.PrimaryScreen.Bounds;
 
             racket.Top = playground.Bottom - (playground.Bottom / 10);
+
+            gameover.Left = (playground.Width / 2) - (gameover.Width / 2);
+            gameover.Top = (playground.Height / 2) - (gameover.Height / 2);
+            gameover.Visible = false;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -38,10 +42,14 @@ namespace Pong
 
             if (ball.Bottom >= racket.Top && ball.Bottom <= racket.Bottom && ball.Left >= racket.Left && ball.Right <= racket.Right)
             {
-                speedTop += 2;
-                speedLeft += 2;
+                /*speedTop += 2;
+                speedLeft += 2;*/
                 speedTop = -speedTop;
                 score += 1;
+                scoreNumber.Text = score.ToString();
+
+                Random color = new Random();
+                playground.BackColor = Color.FromArgb(color.Next(150, 255), color.Next(150, 255), color.Next(150, 255));
             }
 
             if (ball.Left <= playground.Left)
@@ -62,6 +70,7 @@ namespace Pong
             if (ball.Bottom >= playground.Bottom)
             {
                 timer1.Enabled = false;
+                gameover.Visible = true;
             }
         }
 
@@ -70,6 +79,31 @@ namespace Pong
             if (e.KeyCode == Keys.Escape)
             {
                 this.Close();
+            }
+
+            if (e.KeyCode == Keys.Space)
+            {
+                if (timer1.Enabled == true)
+                {
+                    timer1.Stop();
+                }
+                else
+                {
+                    timer1.Start();
+                }
+            }
+
+            if (e.KeyCode == Keys.Enter)
+            {
+                ball.Left = 50;
+                ball.Top = 50;
+                speedLeft = 4;
+                speedTop = 4;
+                score = 0;
+                scoreNumber.Text = "0";
+                timer1.Enabled = true;
+                gameover.Visible = false;
+                playground.BackColor = Color.White;
             }
         }
     }
